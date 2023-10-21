@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Text Analysis</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #35424a;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        container {
+            max-width: 800px;
+            margin: auto;
+            padding: 2rem;
+            border-radius: 5px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #35424a;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #29363d;
+        }
+
+        h2 {
+            margin-top: 1.5rem;
+        }
+
+        pre {
+            white-space: pre-wrap;
+        }
+
+        .error {
+            color: red;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Text Analysis</h1>
+    </header>
+
+    <container>
+        <label for="textInput">Enter text:</label>
+        <textarea id="textInput" rows="4" cols="50"></textarea><br><br>
+
+        <button id="analyzeButton">Analyze Text</button>
+
+        <h2>Analysis Results</h2>
+        <p>Total non-white space characters: <span id="charCount">0</span></p>
+        <p>Total empty spaces: <span id="spaceCount">0</span></p>
+        <p>Total words: <span id="wordCount">0</span></p>
+        <p>Histogram:</p>
+        <pre id="histogram"></pre>
+
+        <div id="errorContainer" class="error"></div>
+    </container>
+
+    <script>
+        document.getElementById('analyzeButton').addEventListener('click', function () {
+            const inputText = document.getElementById('textInput').value;
+            console.log(inputText)
+            const charCount = inputText.replace(/\s/g, '').length;
+            const spaceCount = inputText.split(' ').length - 1;
+            const words = inputText.split(/\s+/).filter(word => word.length > 0);
+            const wordCount = words.length;
+
+            const histogram = {};
+            for (const char of inputText.replace(/\s/g, '')) {
+                if (histogram[char]) {
+                    histogram[char]++;
+                } else {
+                    histogram[char] = 1;
+                }
+            }
+
+            let histogramText = '';
+            for (const char in histogram) {
+                histogramText += `${char}: ${histogram[char]}, `;
+            }
+
+            document.getElementById('charCount').textContent = charCount;
+            document.getElementById('spaceCount').textContent = spaceCount;
+            document.getElementById('wordCount').textContent = wordCount;
+            document.getElementById('histogram').textContent = histogramText;
+
+            // Basic spellchecking
+            const errorMessage = [];
+            for (let i = 0; i < inputText.length - 2; i++) {
+                if (inputText[i] === inputText[i + 1] && inputText[i] === inputText[i + 2]) {
+                    errorMessage.push(`Repeated character "${inputText[i]}" detected at position ${i + 1}`);
+                }
+            }
+
+            if (errorMessage.length > 0) {
+                const errorContainer = document.createElement('div');
+                errorContainer.style.color = 'red';
+                errorMessage.forEach(message => {
+                    const errorItem = document.createElement('p');
+                    errorItem.textContent = message;
+                    errorContainer.appendChild(errorItem);
+                });
+                document.body.appendChild(errorContainer);
+            }
+        });
+    </script>
+</body>
+
+</html>

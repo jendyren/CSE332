@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE332 - Extra Credit</title>
+    <link href="../css/style.css" rel="stylesheet" type="text/css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #c2f5ff;
+            margin: 0;
+            font-family: Poppins;
+        }
+
+        #wrapper {
+            width: 80%;
+            margin: auto;
+            padding: 15px;
+            background-color: white;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #nav {
+            width: 100%;
+            height: 80px;
+            background-color: #69b4e2;
+        }
+
+        h1 {
+            font-size: 42px;
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        a {
+            display: inline-block;
+            width: 24%;
+            background-color: #c2f4ff;
+            text-align: center;
+        }
+
+        .good {
+            caret-color: #10b981;
+        }
+
+        .warning {
+            caret-color: #FCD34D;
+        }
+
+        .danger {
+            caret-color: red;
+        }
+
+        .text-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #f2f2f2;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        #comment,
+        #analyzeButton {
+            margin: 10px 0;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #comment {
+            resize: none;
+        }
+
+        #analyzeButton {
+            background-color: #007BFF;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #analyzeButton:hover {
+            background-color: #0056b3;
+        }
+
+        .error-highlight {
+            background-color: rgb(255, 153, 0);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div class="content">
+            <img src="https://media.giphy.com/media/Pkuzzo4rVMXW558Uka/giphy.gif" style="height:180px" />
+            <h2>CSE332 - Extra Credit </h2>
+            <h4>Jendy Ren </h4>
+
+            <div class="text-box">
+                <textarea id='comment' maxlength='50'></textarea>
+                <button id="analyzeButton">Analyze Text</button>
+            </div>
+            <canvas id="charHistogramChart" width="400" height="200"></canvas>
+            <div id="result">
+
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Get references to the textarea and result div
+        const textarea = document.getElementById('comment');
+        const analyzeButton = document.getElementById('analyzeButton');
+        const resultDiv = document.getElementById('result')
+
+        function getWordCount(str) {
+            // split string on space char -> array of strings
+            // filter out empty strings
+            return str.split(' ')
+                .filter(function (n) { return n != '' })
+                .length;
+        }
+
+        function getWordHistogram(text) {
+            // create object to store character occurrences
+            const charOccurrences = {};
+
+            // iterate through text & count character occurrences
+            for (const char of text) {
+                if (charOccurrences[char]) {
+                    charOccurrences[char]++;
+                } else {
+                    charOccurrences[char] = 1;
+                }
+            }
+
+            return charOccurrences;
+        }
+
+        // create the histogram chart
+        function createHistogramChart(charOccurrences) {
+            const canvas = document.getElementById('charHistogramChart');
+
+            const labels = Object.keys(charOccurrences);
+            const data = Object.values(charOccurrences);
+
+            new Chart(canvas, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Character Occurrences',
+                            data: data,
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                        },
+                    ],
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                        },
+                    },
+                },
+            });
+        }
+
+        function spellcheckText(text) {
+            let spellcheckedText = '';
+            let prevChar = '';
+            let charCount = 0;
+
+            for (const char of text) {
+                if (char === prevChar) {
+                    charCount++;
+                    if (charCount > 2) {
+                        spellcheckedText += `<span class="error-highlight">${char}</span>`;
+                        continue; // skip normal character 
+                    }
+                } else {
+                    charCount = 1;
+                }
+
+                spellcheckedText += char;
+                prevChar = char;
+            }
+
+            return spellcheckedText;
+        }
+
+
+        // Add a click event listener to the "Analyze Text" button
+        analyzeButton.addEventListener('click', function () {
+            // Get the text value from the textarea
+            const text = textarea.value;
+
+            // Count the number of characters
+            // use the \s quantifier to remove all white space
+            let modifiedText = text.replace(/\s/g, "")
+            const charCount = modifiedText.length;
+            const spaceCount = text.split(' ').length - 1;
+            const wordCount = getWordCount(text)
+
+            console.log(charCount);
+            console.log(spaceCount);
+            console.log(wordCount);
+
+            // Count character occurrences using the function
+            const histogram = getWordHistogram(text);
+            console.log(histogram)
+
+            // Display the character histogram
+            createHistogramChart(histogram);
+
+            // Perform spellcheck and highlight errors
+            const spellcheckedText = spellcheckText(text);
+            
+            const resultText = `<strong>Analysis Results: </strong> <br>
+                                # of characters(non-space): ${charCount} <br>
+                                # of space characters: ${spaceCount} <br>
+                                # of words: ${wordCount} <br>
+                                `;
+
+            resultDiv.innerHTML = `${resultText}<br> ${spellcheckedText}`;
+        });
+
+    </script>
+</body>
+</html>

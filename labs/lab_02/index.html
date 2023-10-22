@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>CSE332 - Lab 2</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- FONT
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+    <!-- CSS
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/skeleton.css">
+
+    <!-- Favicon
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <!-- <link rel="icon" type="image/png" href="images/favicon.png"> -->
+
+    <!-- Scripts (Including D3)
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+
+    <!-- <script src="scripts/parse_csv.js"></script> -->
+</head>
+
+<body>
+
+    <!-- Primary Page Layout
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <div class="container">
+        <div class="row">
+            <div class="eight column" style="margin-top: 15%">
+                <h4>CSE332 - Lab 2</h4>
+                <p>
+                    1. Select an borough & attribute from the drop down menu
+                    <br>
+                    2. Select which axis to load the attribute into (x or y)
+                    <br>
+                    3. Press submit to load first axis attribute
+                    <br>
+                    4. Follow steps 1-3 to load second axis attribute
+                    <br><br>
+                    Please note: both x&y axis attributes must be loaded before a scatter plot can be generated
+                    <!-- <a href="http://www.getskeleton.com">Skeleton documentation</a>. -->
+                </p>
+            </div>
+        </div>
+        <hr>
+        <!-- The above form looks like this -->
+        <form>
+            <div class="row">
+                <div class="one-half column" id="left-side">
+                    <p>Selected Borough: None Selected</p>
+                    <p>Selected X-Axis Attribute: None Selected</p>
+                    <p>Selected Y-Axis Attribute: None Selected</p>
+                </div>
+                <div class="one-half column" id="right-side">
+                    <!-- BOROUGH DROP DOWN SELECTOR -->
+                    <div class="drop-down">
+                        <label for="boroughInput">Select a borough</label>
+                        <select class="u-full-width" id="boroughInput">
+                            <option value="brooklyn">Brooklyn</option>
+                            <option value="bronx">Bronx</option>
+                            <option value="manhattan">Manhattan</option>
+                            <option value="staten_island">Staten Island</option>
+                            <option value="queens">Queens</option>
+                        </select>
+                    </div>
+                    <!-- ATTRIBUTE DROP DOWN SELECTOR -->
+                    <div class="drop-down">
+                        <label for="attributeInput">Select an attribute</label>
+                        <select class="u-full-width" id="attributeInput">
+                            <!-- <option value="borough">Borough</option> -->
+                            <option value="categories">Category</option>
+                            <option value="average_hours_opened_per_day">Avg Hours Per Day</option>
+                            <option value="total_hours_opened_per_week">Total Hours Per Week</option>
+                            <option value="review_count">Review Count</option>
+                            <option value="price">Price Range</option>
+                            <option value="stars">Stars</option>
+                            <option value="sentiment_compound_score">Sentiment</option>
+                            <option value="transactions">Transactions</option>
+                        </select>
+                    </div>
+                    <!-- RADIO BUTTON CONTAINER -->
+                    <div class="radio-container">
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionX" value="x-axis">
+                            X-Axis
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="optionsRadios" id="optionY" value="y-axis">
+                            Y-Axis
+                        </label>
+                    </div>
+                    <input class="button-primary" type="submit" value="Submit">
+                </div>
+            </div>
+        </form>
+        <hr>
+        <div class="chart-containers">
+            <div class="u-full-width">
+                <h4>Barchart/Histogram</h4>
+                <div id="barchart-histogram"></div>
+                <div id="histogram"></div>
+            </div>
+            <div class="u-full-width">
+                <h4>Pie Chart</h4>
+                <div id="piechart"></div>
+            </div>
+            <div class="u-full-width">
+                <h4>Scatterplot</h4>
+                <div id="scatterplot"></div>
+            </div>
+        </div>
+
+        <hr>
+        <div class="u-full-width">
+            <h5>Dataset</h5>
+            <p>
+                <a href="https://www.kaggle.com/yelp-dataset/yelp-dataset">Yelp Dataset</a>
+            </p>
+        </div>
+
+        <!-- Always wrap checkbox and radio inputs in a label and use a <span class="label-body"> inside of it -->
+
+        <!-- Note: The class .u-full-width is just a utility class shorthand for width: 100% -->
+    </div>
+    <script src="scripts/global.js"></script>
+    <script type="module" src="scripts/index.js"></script>
+    <!-- End Document
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+</body>
+
+</html>
